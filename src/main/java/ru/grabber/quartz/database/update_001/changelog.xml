@@ -7,7 +7,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="1" author="Ilya">
-        <sqlFile path="sql/create.sql"/>
+        <sqlFile path="sql/create.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
 </databaseChangeLog>
