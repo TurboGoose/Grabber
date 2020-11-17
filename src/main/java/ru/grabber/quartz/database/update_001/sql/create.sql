@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS rabbit(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50)
+);

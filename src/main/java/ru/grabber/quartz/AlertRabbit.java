@@ -5,6 +5,8 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.newJob;
@@ -12,39 +14,51 @@ import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 public class AlertRabbit {
+
     public static void main(String[] args) {
         try {
-            System.out.println(getInterval());
-            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-            scheduler.start();
-            JobDetail job = newJob(Rabbit.class).build();
-            SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(getInterval())
-                    .repeatForever();
-            Trigger trigger = newTrigger()
-                    .withSchedule(times)
-                    .startNow()
-                    .build();
-            scheduler.scheduleJob(job, trigger);
+            Properties config = readProperties();
+            try (Connection connection = DriverManager.getConnection(config.getProperty("url"), config)) {
+                System.out.println("Connection created");
+
+                Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+                JobDataMap data = new JobDataMap();
+                data.put("connection", connection);
+
+                JobDetail job = newJob(Rabbit.class)
+                        .setJobData(data)
+                        .build();
+
+                SimpleScheduleBuilder times = simpleSchedule()
+                        .withIntervalInSeconds(getInterval(config))
+                        .repeatForever();
+
+                Trigger trigger = newTrigger()
+                        .withSchedule(times)
+                        .startNow()
+                        .build();
+                scheduler.scheduleJob(job, trigger);
+
+                System.out.println("Start");
+                scheduler.start();
+                Thread.sleep(10000);
+                scheduler.shutdown();
+                System.out.println("Stop");
+            }
         } catch (Exception exc) {
             exc.printStackTrace();
         }
     }
 
-    private static int getInterval() throws IOException {
-        int interval;
+    private static Properties readProperties() throws IOException {
+        Properties config = new Properties();
         try (InputStream is = ClassLoader.getSystemResourceAsStream("rabbit.properties")) {
-            Properties config = new Properties();
             config.load(is);
-            interval = Integer.parseInt(config.getProperty("rabbit.interval"));
         }
-        return interval;
+        return config;
     }
-}
 
-class Rabbit implements Job {
-    @Override
-    public void execute(JobExecutionContext jobExecutionContext) {
-        System.out.println("Rabbit is here");
+    private static int getInterval(Properties config) {
+        return Integer.parseInt(config.getProperty("rabbit.interval"));
     }
 }
