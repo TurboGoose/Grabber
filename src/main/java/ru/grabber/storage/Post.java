@@ -1,4 +1,4 @@
-package ru.grabber;
+package ru.grabber.storage;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package ru.grabber.parser;
 
 import org.junit.jupiter.api.Test;
-import ru.grabber.Post;
+import ru.grabber.storage.Post;
 
 import java.io.IOException;
 import java.io.InputStream;

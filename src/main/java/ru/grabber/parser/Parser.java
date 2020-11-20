@@ -1,6 +1,6 @@
 package ru.grabber.parser;
 
-import ru.grabber.Post;
+import ru.grabber.storage.Post;
 
 import java.util.List;
 

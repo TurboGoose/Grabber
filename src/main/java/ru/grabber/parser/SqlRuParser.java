@@ -3,7 +3,7 @@ package ru.grabber.parser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import ru.grabber.Post;
+import ru.grabber.storage.Post;
 
 import java.util.ArrayList;
 import java.util.List;
