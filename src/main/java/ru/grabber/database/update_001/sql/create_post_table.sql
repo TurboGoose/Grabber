@@ -3,5 +3,5 @@ CREATE TABLE IF NOT EXISTS post (
     name VARCHAR(256),
     text TEXT,
     link VARCHAR(512) UNIQUE,
-    created DATE
+    created TIMESTAMP
 )
