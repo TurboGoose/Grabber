@@ -26,7 +26,6 @@ class SqlRuParserTest {
         expected.setName(vacancyProperties.getProperty("name"));
         expected.setText(vacancyProperties.getProperty("text"));
         expected.setLink(vacancyProperties.getProperty("link"));
-
         expected.setCreated(LocalDateTime.parse(vacancyProperties.getProperty("created")));
 
         assertThat(actual, is(expected));
