@@ -66,4 +66,12 @@ public class Post {
     public int hashCode() {
         return Objects.hash(id, name, text, link, created);
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+          "Post [%d]:\nName:\t%s\nText:\t%s\nLink:\t%s\nCreated:\t%s\n",
+          id, name, text, link, created
+        );
+    }
 }

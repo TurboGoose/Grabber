@@ -16,10 +16,8 @@ public class SqlRuParser implements Parser {
     public List<Post> list(String link) {
         List<Post> result = new ArrayList<>();
         try {
-
             forumPage = Jsoup.connect(link).get();
             extractVacancyLinks().forEach(l -> result.add(detail(l)));
-
         } catch (Exception exc) {
             exc.printStackTrace();
         }
