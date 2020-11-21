@@ -4,6 +4,8 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
@@ -11,23 +13,24 @@ import java.util.Properties;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-// version without rollbacks
 class PsqlStoreTest {
     static PsqlStore store;
     static Post testPost;
 
     @BeforeAll
-    static void setup() throws IOException {
+    static void setup() throws Exception {
         loadStore();
         loadTestPost();
     }
 
-    static void loadStore() throws IOException {
+    static void loadStore() throws IOException, SQLException {
         Properties storeConfig = new Properties();
         try (InputStream is = ClassLoader.getSystemResourceAsStream("store.properties")) {
             storeConfig.load(is);
         }
-        store = new PsqlStore(storeConfig);
+        store = new PsqlStore(ConnectionRollback.create(
+                DriverManager.getConnection(storeConfig.getProperty("url"), storeConfig)
+        ));
     }
 
     static void loadTestPost() throws IOException {

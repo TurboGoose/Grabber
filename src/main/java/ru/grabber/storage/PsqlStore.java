@@ -17,6 +17,10 @@ public class PsqlStore implements Store, AutoCloseable {
         }
     }
 
+    PsqlStore(Connection connection) {
+        this.connection = connection;
+    }
+
     @Override
     public boolean save(Post post) {
         boolean success;
