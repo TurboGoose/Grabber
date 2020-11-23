@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class GrabJob implements Job {
     private Store store;
@@ -31,7 +32,9 @@ public class GrabJob implements Job {
     }
 
     private void execute() {
+        System.out.println("Retrieving data...");
         saveFirstPage();
+        System.out.println("Displaying data...");
         displayAllPosts();
     }
 
@@ -44,7 +47,7 @@ public class GrabJob implements Job {
             try (ServerSocket server = new ServerSocket(port)) {
                 while (!server.isClosed()) {
                     Socket socket = server.accept();
-                    try (PrintWriter out = new PrintWriter(socket.getOutputStream())) {
+                    try (PrintWriter out = new PrintWriter(socket.getOutputStream(), true, StandardCharsets.UTF_8)) {
                         out.println("HTTP/1.1 200 OK" + System.lineSeparator());
                         for (Post post : store.getAll()) {
                             out.println(post);

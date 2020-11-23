@@ -43,7 +43,7 @@ public class PsqlStore implements Store, AutoCloseable {
     public List<Post> getAll() {
         List<Post> result = new ArrayList<>();
         try (PreparedStatement st = connection.prepareStatement(
-                "SELECT * FROM post ORDER BY created;"
+                "SELECT * FROM post ORDER BY created DESC;"
         )) {
             ResultSet selected = st.executeQuery();
             while (selected.next()) {
