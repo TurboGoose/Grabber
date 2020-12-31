@@ -23,7 +23,7 @@ public class PsqlStore implements Store, AutoCloseable {
 
     @Override
     public boolean save(Post post) {
-        boolean success;
+        boolean success = false;
         try (PreparedStatement st = connection.prepareStatement(
                 "INSERT INTO post(id, name, text, link, created) VALUES(?, ?, ?, ?, ?);"
         )) {
@@ -33,9 +33,7 @@ public class PsqlStore implements Store, AutoCloseable {
             st.setString(4, post.getLink());
             st.setObject(5, post.getCreated());
             success = st.executeUpdate() == 1;
-        } catch (SQLException exc) {
-            throw new IllegalStateException(exc);
-        }
+        } catch (SQLException ignore) {}
         return success;
     }
 
@@ -55,9 +53,7 @@ public class PsqlStore implements Store, AutoCloseable {
                 post.setCreated(selected.getObject("created", LocalDateTime.class));
                 result.add(post);
             }
-        } catch (SQLException exc) {
-            throw new IllegalStateException(exc);
-        }
+        } catch (SQLException ignore) {}
         return result;
     }
 
@@ -76,9 +72,7 @@ public class PsqlStore implements Store, AutoCloseable {
                 result.setLink(selected.getString("link"));
                 result.setCreated(selected.getObject("created", LocalDateTime.class));
             }
-        } catch (SQLException exc) {
-            throw new IllegalStateException(exc);
-        }
+        } catch (SQLException ignore) {}
         return result;
     }
 
